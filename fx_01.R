@@ -5,7 +5,7 @@
 #' This function will create or connect to a folder to store justice data pull through the Socrata platform 
 #' as well as store API credentials
 #' @param folder str folder location to be created or initialized
-init_justice_data <- function(justice_folder) {
+init_tidyjustice <- function(justice_folder) {
   
   #check if specified justice folder exists, if it doesn't give user option to create
   if (dir.exists(justice_folder)) {
@@ -145,7 +145,6 @@ download_table <- function(api_key = Sys.getenv("SOCRATA_API_KEY"),
   write_rds(df, file = paste0(Sys.getenv("JUSTICE_DATA_CACHE"), "/", table_name, timestamp, ".rds"))
   
   gc()
-  
 }
 
 ##download all 'justice' tables
@@ -402,6 +401,18 @@ clean_warrants <- function(warrant_data) {
   return(df02)
 }
 
+
+## clean case data ##
+clean_cases <- function(x) {
+  
+}
+
+
+## clean hearings data ##
+clean_hearings <- function(x) {
+  
+}
+
 #### ANALYSIS FUNCTIONS ####
 
 
@@ -453,10 +464,16 @@ get_hearings <- function(x) {
 
 ## get warrants for a party
 #' @description
-#' a function to pull warrants related to a partyID
-#' 
-get_warrants <- function(x) {
+#' a function to pull warrants related to a party.id
+#' @param warrant_data tibble a df of cleaned warrant data that has come out of the clean_warrants fx
+#' @param party_data tibble a df that includes party.id, this should be de-duplicated
+get_warrants <- function(warrant_data, 
+                         party_data) {
   
+  if (length(unique(party_data$party.id)) != nrow(party_data)) {
+    cli::cli_alert_warning("There is a duplicate party in your party data, please de-duplicate before running this function")
+    stop()
+  }
   
   
 }
